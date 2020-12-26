@@ -1,5 +1,5 @@
 #include <fstream>
-#include <set>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -8,8 +8,12 @@ using namespace std;
 
 struct Word {
     string w;
-    multiset<char> c;
+    string c;
 };
+
+bool operator<(const Word &l, const Word &r) {
+    return l.c < r.c;
+}
 
 int main() {
     ifstream in("t1.in");
@@ -31,38 +35,28 @@ int main() {
             cout << "Ошибка чтения из файла";
             return 0;
         }
-        multiset<char> c;
-        for(char ch : w) {
-            c.insert(ch);
-        }
-
+        string c = w;
+        sort(c.begin(), c.end());
         words.push_back(Word{w,c});
     }
-    
-    vector<bool> analyzed(words.size());
+    sort(words.begin(), words.end());
+
     for(int i = 0; i < words.size(); i++) {
-        if(analyzed[i]) {
-            continue;
-        }
-        analyzed[i] = true;
         bool found = false;
-        vector<string> collisions;
-        collisions.push_back(words[i].w);
-        for(int j = 0; j < words.size(); j++) {
-            if(analyzed[j]) {
-                continue;
-            }
+        for(int j = i + 1; j < words.size(); j++) {
             if(words[i].c == words[j].c) {
+                if(!found) {
+                    out << words[i].w << endl;
+                }
                 found = true;
-                analyzed[j] = true;
-                collisions.push_back(words[j].w);
+                out << words[j].w << endl;
+            } else {
+                if(found) {
+                    out << endl;
+                }
+                i = j - 1;
+                break;
             }
-        }
-        if(found) {
-            for(string s : collisions) {
-                out << s << endl;
-            }
-            out << endl;
         }
     }
 }
