@@ -2,6 +2,7 @@
 #include <set>
 #include <vector>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -15,8 +16,21 @@ int main() {
     ofstream out("t1.out");
     vector<Word> words;
 
+    if(!in.is_open()) {
+        cout << "Невозможно открыть входной файл";
+        return 0;
+    }
+    if(!out.is_open()) {
+        cout << "Невозможно открыть выходной файл";
+        return 0;
+    }
+
     string w;
     while(in >> w) {
+        if(!in.good()) {
+            cout << "Ошибка чтения из файла";
+            return 0;
+        }
         multiset<char> c;
         for(char ch : w) {
             c.insert(ch);
