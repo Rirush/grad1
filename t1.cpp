@@ -41,22 +41,17 @@ int main() {
     }
     sort(words.begin(), words.end());
 
-    for(int i = 0; i < words.size(); i++) {
-        bool found = false;
-        for(int j = i + 1; j < words.size(); j++) {
-            if(words[i].c == words[j].c) {
-                if(!found) {
-                    out << words[i].w << endl;
-                }
-                found = true;
-                out << words[j].w << endl;
-            } else {
-                if(found) {
-                    out << endl;
-                }
-                i = j - 1;
-                break;
-            }
+    bool found = false;
+    for(int i = 1; i < words.size(); i++) {
+        if(words[i-1].c == words[i].c) {
+            out << words[i-1].w << endl;
+            found = true;
+        } else if(found) {
+            out << words[i-1].w << endl << endl;
+            found = false;
         }
+    }
+    if(found) {
+        out << words[words.size()-1].w << endl;
     }
 }
